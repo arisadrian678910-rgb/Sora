@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SORA STR - Premium Store</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #00bcd4; /* Tosca Cerah */
+            --secondary: #0097a7; /* Tosca Gelap */
+            --bg-gradient: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-dark: #006064;
+            --shadow: 0 10px 30px rgba(0, 188, 212, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body {
+            background: var(--bg-gradient);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(to right, var(--secondary), var(--primary));
+            padding: 40px 20px;
+            text-align: center;
+            color: white;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 { font-size: 2.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; text-shadow: 1px 1px 3px rgba(0,0,0,0.2); }
+        .subtitle { font-size: 1rem; opacity: 0.9; margin-top: 5px; }
+        
+        .contact-bar {
+            display: flex; justify-content: center; gap: 15px; margin-top: 20px; flex-wrap: wrap;
+        }
+        .badge {
+            background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 50px; font-size: 0.9rem; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        /* Container */
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+
+        /* Safety Box */
+        .safety-box {
+            background: white; border-left: 5px solid var(--primary); padding: 20px; border-radius: 10px;
+            box-shadow: var(--shadow); margin-bottom: 40px; text-align: center; color: var(--text-dark);
+        }
+        .safety-box strong { color: var(--secondary); }
+
+        /* Section Title */
+        .section-title {
+            font-size: 1.5rem; color: var(--text-dark); margin: 40px 0 20px; padding-left: 15px;
+            border-left: 5px solid var(--primary); background: white; padding: 10px 15px;
+            border-radius: 0 10px 10px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        /* Grid & Cards */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        
+        .card {
+            background: var(--card-bg); border-radius: 20px; padding: 25px;
+            transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.5);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); display: flex; flex-direction: column;
+        }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0, 188, 212, 0.2); border-color: var(--primary); }
+        
+        .card-header { font-size: 1.2rem; font-weight: 700; color: var(--text-dark); margin-bottom: 5px; }
+        .card-desc { font-size: 0.9rem; color: #666; margin-bottom: 15px; flex-grow: 1; }
+        .price { font-size: 1.4rem; color: var(--primary); font-weight: 800; margin-bottom: 20px; }
+
+        .btn-buy {
+            background: var(--primary); color: white; border: none; padding: 12px;
+            border-radius: 10px; width: 100%; cursor: pointer; font-weight: 600; font-size: 1rem;
+            transition: background 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-buy:hover { background: var(--secondary); }
+
+        /* Quote Box */
+        .quote-box {
+            background: #fff; border: 2px dashed var(--primary); padding: 20px; border-radius: 15px;
+            margin: 20px 0; text-align: center; color: var(--text-dark);
+        }
+
+        /* MODAL PAYMENT STYLES */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px);
+            z-index: 1000; display: none; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+
+        .modal-content {
+            background: white; width: 90%; max-width: 500px; border-radius: 20px;
+            padding: 30px; position: relative; transform: scale(0.8); transition: transform 0.3s ease;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center;
+        }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+
+        .close-modal {
+            position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: #999;
+        }
+        .close-modal:hover { color: var(--primary); }
+
+        .payment-options { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+        
+        .pay-btn {
+            padding: 15px; border-radius: 12px; border: 2px solid #eee; background: white;
+            cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+            font-weight: 600; color: #555; transition: all 0.2s;
+        }
+        .pay-btn:hover { border-color: var(--primary); background: #f0fbfc; color: var(--text-dark); }
+        .pay-btn i { font-size: 1.5rem; }
+        
+        /* QRIS Display Area */
+        #qris-display { display: none; margin-top: 20px; animation: fadeIn 0.5s; }
+        #qris-display img { width: 100%; max-width: 300px; border-radius: 10px; border: 2px solid #eee; }
+        
+        #dana-display { display: none; margin-top: 20px; animation: fadeIn 0.5s; }
+        .dana-number { font-size: 1.5rem; font-weight: bold; color: #118EEA; background: #eef6ff; padding: 10px; border-radius: 8px; margin: 10px 0; }
+
+        .confirm-actions {
+            margin-top: 20px; display: flex; gap: 10px; justify-content: center;
+        }
+        .btn-wa-sm { background: #25D366; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
+        .btn-tg-sm { background: #0088cc; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        footer { text-align: center; padding: 40px; margin-top: 50px; background: var(--text-dark); color: #b2ebf2; }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.6rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>ALL PRODUK SORA STR</h1>
+        <div class="subtitle">Premium Quality & Trusted Service</div>
+        <div class="contact-bar">
+            <div class="badge"><i class="fab fa-telegram"></i> @Soraris01</div>
+            <div class="badge"><i class="fab fa-whatsapp"></i> 085701090309</div>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- Safety Note -->
+        <div class="safety-box">
+            <i class="fas fa-shield-alt"></i> NO BAN NO BANED NO SURCIN 100% AMAN<br>
+            <small style="font-weight: normal;">[NOTE: FILE SEMUANYA SUDAH TERJAMIN AMAN 100% KARENA SUDAH DI UJI COBA JADI JANGAN TAKUT KE BANED/SC/BL]</small>
+        </div>
+
+        <!-- LIST REGE -->
+        <h2 class="section-title">LIST REGE</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="card-header">REGEDIT 80%</div>
+                <div class="price">10K</div>
+                <button class="btn-buy" onclick="openModal('REGEDIT 80%', '10K')"><i class="fas fa-shopping-cart"></i> Beli Sekarang</button>
+            </div>
+            <div class="card">
+                <div class="card-header">REGEDIT 90%</div>
+                <div class="price">20K</div>
+                <button class="btn-buy" onclick="openModal('REGEDIT 90%', '20K')"><i class="fas fa-shopping-cart"></i> Beli Sekarang</button>
+            </div>
+            <div class="card">
+                <div class="card-header">REGEDIT 100%</div>
+                <div class="price">30K</div>
+                <button class="btn-buy" onclick="openModal('REGEDIT 100%', '30K')"><i class="fas fa-shopping-cart"></i> Beli Sekarang</button>
+            </div>
+        </div>
+
+        <!-- LIST AIMLOCK -->
+        <h2 class="section-title">LIST AIMLOCK</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="card-header">AIMLOCK 80%</div>
+                <div class="price">15K</div>
+                <button class="btn-buy" onclick="openModal('AIMLOCK 80%', '15K')"><i class="fas fa-shopping-cart"></i> Beli Sekarang</button>
+            </div>
+            <div class="card">
+                <div class="card-header">AIMLOCK 90%</div>
+                <div class="price">20K</div>
+                <button class="btn-buy" onclick="openModal('AIMLOCK 90%', '20K')"><i class="fas fa-shopping-cart"></i> Beli Sekarang</button>
+            </div>
+            <div class="card">
+                <div class="card-header">AIMLOCK BRUTAL</div>
+                <div class="price">35K</div>
+                <button class="btn-buy" onclick="openModal('AIMLOCK BRUTAL', '35K')"><i class="fas fa-shopping-cart"></i> Beli Sekarang</button>
+            </div>
+        </div>
+
+        <!-- LIST PANEL FF -->
+        <h2 class="section-title">LIST PANEL FF</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="card-header">PANEL 80%</div>
+                <div class="price">15K</div>
+                <button class="btn-buy" onclick="openModal('PANEL FF 80%', '15K')"><i class="fas fa-shopping-cart"></i> Beli Sekarang</button>
+            </div>
+            <div class="card">
+                <div class="card-header">PANEL 90%</div>
+                <div class="price">20K</div>
+                <button class="btn-buy" onclick="openModal('PANEL FF 90%', '20K')"><i class="fas fa-shopping-cart"></i> Beli Sekarang</button>
+            </div>
+            <div class="card">
+                <div class="card-header">PANEL 100%</div>
+                <div class="price">30K</div>
+                <button class="btn-buy" onclick="openModal('PANEL FF 100%', '30K')"><i class="fas fa-shopping-cart"></i> Beli Sekarang</button>
+            </div>
+        </div>
+
+        <!-- LIST SET ANDRO -->
+        <h2 class="section-title">LIST SET ANDRO</h2>
+        <div class="grid">
+            <div class="card"><div class="card-header">SET ANDRO KAMIL</div><div class="price">7K</div><button class="btn-buy" onclick="openModal('SET ANDRO KAMIL', '7K')">Beli</button></div>
+            <div class="card"><div class="card-header">SET ANDRO HUGO</div><div class="price">7K</div><button class="btn-buy" onclick="openModal('SET ANDRO HUGO', '7K')">Beli</button></div>
+            <div class="card"><div class="card-header">SET ANDRO NEPTUNUS</div><div class="price">12K</div><button class="btn-buy" onclick="openModal('SET ANDRO NEPTUNUS', '12K')">Beli</button></div>
+            <div class="card"><div class="card-header">SET ANDRO JUST NANO</div><div class="price">12K</div><button class="btn-buy" onclick="openModal('SET ANDRO JUST NANO', '12K')">Beli</button></div>
+            <div class="card"><div class="card-header">SET ANDRO NOXXA</div><div class="price">8K</div><button class="btn-buy" onclick="openModal('SET ANDRO NOXXA', '8K')">Beli</button></div>
+            <div class="card"><div class="card-header">SET ANDRO CANZ</div><div class="price">3K</div><button class="btn-buy" onclick="openModal('SET ANDRO CANZ', '3K')">Beli</button></div>
+            <div class="card"><div class="card-header">SET ANDRO TANZ</div><div class="price">2K</div><button class="btn-buy" onclick="openModal('SET ANDRO TANZ', '2K')">Beli</button></div>
+            <div class="card"><div class="card-header">SET ANDRO JAPAR</div><div class="price">6K</div><button class="btn-buy" onclick="openModal('SET ANDRO JAPAR', '6K')">Beli</button></div>
+            <div class="card"><div class="card-header">SET ANDRO FLADO</div><div class="price">5K</div><button class="btn-buy" onclick="openModal('SET ANDRO FLADO', '5K')">Beli</button></div>
+            <div class="card"><div class="card-header">SET ANDRO VANDER</div><div class="price">2K</div><button class="btn-buy" onclick="openModal('SET ANDRO VANDER', '2K')">Beli</button></div>
+            <div class="card"><div class="card-header">SET ANDRO LINTZY</div><div class="price">2K</div><button class="btn-buy" onclick="openModal('SET ANDRO LINTZY', '2K')">Beli</button></div>
+            <div class="card"><div class="card-header">SET ANDRO AENK</div><div class="price">4K</div><button class="btn-buy" onclick="openModal('SET ANDRO AENK', '4K')">Beli</button></div>
+            <div class="card"><div class="card-header">SET ANDRO TEKEN</div><div class="price">4K</div><button class="btn-buy" onclick="openModal('SET ANDRO TEKEN', '4K')">Beli</button></div>
+            <div class="card"><div class="card-header">SET ANDRO RENDERZ</div><div class="price">20K</div><button class="btn-buy" onclick="openModal('SET ANDRO RENDERZ', '20K')">Beli</button></div>
+        </div>
+
+        <!-- RW MOBILE LEGEND -->
+        <h2 class="section-title">RW MOBILE LEGEND</h2>
+        <div class="quote-box">
+            🗣️:BANG KENAPA RW NYA MAHAL?<br>
+            ME: <strong>KARENA MAKIN MAHAL MAKIN BERKUALITAS</strong>
+        </div>
+        <div class="grid">
+            <div class="card"><div class="card-header">RW BIASA</div><div class="price">10K</div><button class="btn-buy" onclick="openModal('RW BIASA ML', '10K')">Beli</button></div>
+            <div class="card"><div class="card-header">RW PREMIUM</div><div class="price">20K</div><button class="btn-buy" onclick="openModal('RW PREMIUM ML', '20K')">Beli</button></div>
+            <div class="card"><div class="card-header">RW VIP</div><div class="price">30K</div><button class="btn-buy" onclick="openModal('RW VIP ML', '30K')">Beli</button></div>
+            <div class="card"><div class="card-header">RW VVIP</div><div class="price">50K</div><button class="btn-buy" onclick="openModal('RW VVIP ML', '50K')">Beli</button></div>
+        </div>
+
+        <!-- APK & BUG -->
+        <h2 class="section-title">APK & BUG</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="card-header">APK JB</div>
+                <div class="card-desc">bukan apk gratisan yg di tt atau play store. APK + FULL TUTOR.</div>
+                <div class="price">5K</div>
+                <button class="btn-buy" onclick="openModal('APK JB + TUTOR', '5K')">Beli</button>
+            </div>
+            <div class="card">
+                <div class="card-header">BUG WA</div>
+                <div class="card-desc">PERNOMOR</div>
+                <div class="price">3K</div>
+                <button class="btn-buy" onclick="openModal('BUG WA PERNOMOR', '3K')">Beli</button>
+            </div>
+        </div>
+
+        <!-- LIST NOKOS -->
+        <h2 class="section-title">LIST NOKOS</h2>
+        <div class="grid">
+            <div class="card"><div class="card-header">INDONESIA</div><div class="price">4K - 40K</div><button class="btn-buy" onclick="openModal('NOKOS INDONESIA', '4K-40K')">Beli</button></div>
+            <div class="card"><div class="card-header">PHILIPPINES</div><div class="price">7K - 35K</div><button class="btn-buy" onclick="openModal('NOKOS PHILIPPINES', '7K-35K')">Beli</button></div>
+            <div class="card"><div class="card-header">MALAYSIA</div><div class="price">10K - 50K</div><button class="btn-buy" onclick="openModal('NOKOS MALAYSIA', '10K-50K')">Beli</button></div>
+            <div class="card"><div class="card-header">THAILAND</div><div class="price">12K - 70K</div><button class="btn-buy" onclick="openModal('NOKOS THAILAND', '12K-70K')">Beli</button></div>
+            <div class="card"><div class="card-header">CAMBODIA</div><div class="price">10K - 45K</div><button class="btn-buy" onclick="openModal('NOKOS CAMBODIA', '10K-45K')">Beli</button></div>
+        </div>
+
+        <!-- TOP UP FF -->
+        <h2 class="section-title">TOP UP FF SORA STR</h2>
+        <div class="grid">
+            <div class="card"><div class="card-header">15 DM</div><div class="price">5K</div><button class="btn-buy" onclick="openModal('FF 15 DM', '5K')">Beli</button></div>
+            <div class="card"><div class="card-header">70 DM</div><div class="price">10K</div><button class="btn-buy" onclick="openModal('FF 70 DM', '10K')">Beli</button></div>
+            <div class="card"><div class="card-header">100 DM</div><div class="price">15K</div><button class="btn-buy" onclick="openModal('FF 100 DM', '15K')">Beli</button></div>
+            <div class="card"><div class="card-header">140 DM</div><div class="price">20K</div><button class="btn-buy" onclick="openModal('FF 140 DM', '20K')">Beli</button></div>
+            <div class="card"><div class="card-header">210 DM</div><div class="price">30K</div><button class="btn-buy" onclick="openModal('FF 210 DM', '30K')">Beli</button></div>
+            <div class="card"><div class="card-header">355 DM</div><div class="price">50K</div><button class="btn-buy" onclick="openModal('FF 355 DM', '50K')">Beli</button></div>
+            <div class="card"><div class="card-header">500 DM</div><div class="price">70K</div><button class="btn-buy" onclick="openModal('FF 500 DM', '70K')">Beli</button></div>
+            <div class="card"><div class="card-header">720 DM</div><div class="price">100K</div><button class="btn-buy" onclick="openModal('FF 720 DM', '100K')">Beli</button></div>
+            
+            <div class="card"><div class="card-header">1075 DM</div><div class="price">150K</div><button class="btn-buy" onclick="openModal('FF 1075 DM', '150K')">Beli</button></div>
+            <div class="card"><div class="card-header">2000 DM</div><div class="price">250K</div><button class="btn-buy" onclick="openModal('FF 2000 DM', '250K')">Beli</button></div>
+            <div class="card"><div class="card-header">4000 DM</div><div class="price">500K</div><button class="btn-buy" onclick="openModal('FF 4000 DM', '500K')">Beli</button></div>
+            <div class="card"><div class="card-header">4050 DM</div><div class="price">510K</div><button class="btn-buy" onclick="openModal('FF 4050 DM', '510K')">Beli</button></div>
+            <div class="card"><div class="card-header">4720 DM</div><div class="price">590K</div><button class="btn-buy" onclick="openModal('FF 4720 DM', '590K')">Beli</button></div>
+            <div class="card"><div class="card-header">4850 DM</div><div class="price">600K</div><button class="btn-buy" onclick="openModal('FF 4850 DM', '600K')">Beli</button></div>
+            <div class="card"><div class="card-header">5500 DM</div><div class="price">690K</div><button class="btn-buy" onclick="openModal('FF 5500 DM', '690K')">Beli</button></div>
+            <div class="card"><div class="card-header">6550 DM</div><div class="price">820K</div><button class="btn-buy" onclick="openModal('FF 6550 DM', '820K')">Beli</button></div>
+            <div class="card"><div class="card-header">7290 DM</div><div class="price">850K</div><button class="btn-buy" onclick="openModal('FF 7290 DM', '850K')">Beli</button></div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 SORA STR. All Rights Reserved.</p>
+        <p>Trusted Seller | Fast Response | High Quality</p>
+    </footer>
+
+    <!-- MODAL PEMBAYARAN -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h3 style="color: var(--text-dark); margin-bottom: 10px;">Metode Pembayaran</h3>
+            <p style="color: #666; font-size: 0.9rem;">Silakan pilih metode pembayaran untuk:</p>
+            <div id="modal-item-name" style="font-weight: bold; color: var(--primary); margin-bottom: 20px;"></div>
+
+            <!-- Pilihan Metode -->
+            <div class="payment-options" id="initial-options">
+                <button class="pay-btn" onclick="showQRIS()">
+                    <span><i class="fas fa-qrcode" style="color: #333;"></i> Scan QRIS (All Payment)</span>
+                    <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: #ccc;"></i>
+                </button>
+                <button class="pay-btn" onclick="showDana()">
+                    <span><i class="fas fa-wallet" style="color: #118EEA;"></i> Transfer DANA</span>
+                    <i class="fas fa-chevron-right" style="font-size: 0.8rem; color: #ccc;"></i>
+                </button>
+            </div>
+
+            <!-- Tampilan QRIS -->
+            <div id="qris-display">
+                <p style="font-size: 0.9rem; margin-bottom: 10px;">Scan QRIS di bawah ini menggunakan aplikasi apa saja (BCA, OVO, Dana, ShopeePay, dll): NOTE : SERTAKAN BUKTI TF</P>
+                <!--  'qris-sora.jpg'  -->
+                <img src="https://www.image2url.com/r2/default/files/1780301654237-5e2cdaa3-7288-4f4d-b65f-2e6ffb5ef5b2.jpg" alt="QR SORA STR" onerror="https://www.image2url.com/r2/default/files/1780301654237-5e2cdaa3-7288-4f4d-b65f-2e6ffb5ef5b2.jpg);">
+                <div style="margin-top: 15px; font-size: 0.8rem; color: #888;">NMID: ID2022228753010</div>
+            </div>
+
+            <!-- Tampilan DANA -->
+            <div id="dana-display">
+                <p style="font-size: 0.9rem;">Transfer ke nomor DANA berikut: NOTE : SERTAKAN BUKTI TF</p>
+                <div class="dana-number">089690714724</div>
+                <p style="font-size: 0.8rem; color: #666;">a.n SORA STR</p>
+            </div>
+
+            <!-- Tombol Konfirmasi -->
+            <div class="confirm-actions" id="confirm-actions" style="display: none;">
+                <a href="#" id="wa-link" class="btn-wa-sm" target="_blank"><i class="fab fa-whatsapp"></i> Konfirmasi via WA</a>
+                <a href="#" id="tg-link" class="btn-tg-sm" target="_blank"><i class="fab fa-telegram"></i> Konfirmasi via TG</a>
+            </div>
+            
+            <button id="back-btn" class="pay-btn" style="margin-top: 15px; display: none; justify-content: center;" onclick="resetModal()">
+                <i class="fas fa-arrow-left"></i> Kembali Pilih Metode
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Konfigurasi Kontak
+        const waNumber = "6285701090309"; 
+        const tgUsername = "Soraris01";
+        
+        let currentItem = "";
+        let currentPrice = "";
+
+        function openModal(item, price) {
+            currentItem = item;
+            currentPrice = price;
+            
+            document.getElementById('modal-item-name').innerText = `${item} - ${price}`;
+            document.getElementById('paymentModal').classList.add('active');
+            
+            // Reset tampilan modal
+            resetModal();
+        }
+
+        function closeModal() {
+            document.getElementById('paymentModal').classList.remove('active');
+        }
+
+        function resetModal() {
+            document.getElementById('initial-options').style.display = 'flex';
+            document.getElementById('qris-display').style.display = 'none';
+            document.getElementById('dana-display').style.display = 'none';
+            document.getElementById('confirm-actions').style.display = 'none';
+            document.getElementById('back-btn').style.display = 'none';
+        }
+
+        function showQRIS() {
+            document.getElementById('initial-options').style.display = 'none';
+            document.getElementById('qris-display').style.display = 'block';
+            document.getElementById('confirm-actions').style.display = 'flex';
+            document.getElementById('back-btn').style.display = 'block';
+            updateLinks("QRIS");
+        }
+
+        function showDana() {
+            document.getElementById('initial-options').style.display = 'none';
+            document.getElementById('dana-display').style.display = 'block';
+            document.getElementById('confirm-actions').style.display = 'flex';
+            document.getElementById('back-btn').style.display = 'block';
+            updateLinks("DANA");
+        }
+
+        function updateLinks(method) {
+            const message = `Halo Admin SORA STR, saya sudah melakukan pembayaran via *${method}* untuk:\n\n*Item:* ${currentItem}\n*Harga:* ${currentPrice}\n\nMohon diproses, terima kasih!`;
+            const encodedMsg = encodeURIComponent(message);
+            
+            document.getElementById('wa-link').href = `https://wa.me/${waNumber}?text=${encodedMsg}`;
+            document.getElementById('tg-link').href = `https://t.me/${tgUsername}?text=${encodedMsg}`;
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('paymentModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
